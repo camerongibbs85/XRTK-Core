@@ -84,6 +84,8 @@ namespace XRTK.Services.CameraSystem
         /// <inheritdoc />
         public override void Update()
         {
+            base.Update();
+
             if (Application.isEditor && profile.IsCameraControlEnabled)
             {
                 editorControls.Update();

@@ -25,7 +25,7 @@ namespace XRTK.Extensions
         /// <param name="application">The Application to run through the command line. Default application is "cmd.exe"</param>
         /// <returns>Output string.</returns>
         /// <remarks>This process will block the main thread of the editor if command takes too long to run. Use <see cref="RunAsync(Process,string,string,bool,CancellationToken)"/> for a background process.</remarks>
-        public static bool Run(this Process process, string args, out string output, string application = @"cmd.exe")
+        public static bool Run(this Process process, string args, out string output, string application = "")
         {
             if (string.IsNullOrEmpty(args))
             {
@@ -34,15 +34,17 @@ namespace XRTK.Extensions
                 return false;
             }
 
+            SetupPlatformArgs(ref args, ref application);
+
             process.StartInfo = new ProcessStartInfo
             {
-                WindowStyle = ProcessWindowStyle.Normal,
+                Arguments = args,
                 CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
                 FileName = application,
-                Arguments = args
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                WindowStyle = ProcessWindowStyle.Hidden
             };
 
             try
@@ -81,21 +83,37 @@ namespace XRTK.Extensions
         /// Starts a process asynchronously.
         /// </summary>
         /// <param name="process">This Process.</param>
+        /// <param name="args">The Process arguments.</param>
+        /// <param name="showDebug">Should output debug code to Editor Console?</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns><see cref="ProcessResult"/></returns>
+        public static async Task<ProcessResult> RunAsync(this Process process, string args, bool showDebug, CancellationToken cancellationToken = default)
+        {
+            return await RunAsync(process, args, string.Empty, showDebug, cancellationToken);
+        }
+
+        /// <summary>
+        /// Starts a process asynchronously.
+        /// </summary>
+        /// <param name="process">This Process.</param>
         /// <param name="application">The process executable to run.</param>
         /// <param name="args">The Process arguments.</param>
         /// <param name="showDebug">Should output debug code to Editor Console?</param>
         /// <param name="cancellationToken"></param>
         /// <returns><see cref="ProcessResult"/></returns>
-        public static async Task<ProcessResult> RunAsync(this Process process, string args, string application = @"cmd.exe", bool showDebug = false, CancellationToken cancellationToken = default)
+        public static async Task<ProcessResult> RunAsync(this Process process, string args, string application = "", bool showDebug = false, CancellationToken cancellationToken = default)
         {
+            SetupPlatformArgs(ref args, ref application);
+
             return await RunAsync(process, new ProcessStartInfo
             {
-                FileName = application,
+                Arguments = args,
                 CreateNoWindow = true,
+                FileName = application,
                 UseShellExecute = false,
-                RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                Arguments = args
+                RedirectStandardOutput = true,
+                WindowStyle = ProcessWindowStyle.Hidden
             }, showDebug, cancellationToken);
         }
 
@@ -192,7 +210,9 @@ namespace XRTK.Extensions
             {
                 // ReSharper disable once MethodSupportsCancellation
                 // We utilize the cancellation token in the loop
-                await Task.Run(() =>
+                await Task.Run(ProcessWatcher);
+
+                void ProcessWatcher()
                 {
                     try
                     {
@@ -201,6 +221,8 @@ namespace XRTK.Extensions
                             if (cancellationToken.IsCancellationRequested)
                             {
                                 runningProcess.Kill();
+                                runningProcess.Close();
+                                runningProcess.Dispose();
                             }
                         }
                     }
@@ -208,10 +230,31 @@ namespace XRTK.Extensions
                     {
                         // ignored
                     }
-                });
+                }
             }
 
             return await processResult.Task;
+        }
+
+        private static void SetupPlatformArgs(ref string args, ref string application)
+        {
+            var updateApplication = string.IsNullOrWhiteSpace(application);
+
+#if UNITY_EDITOR_WIN
+            if (updateApplication)
+            {
+                application = "cmd.exe";
+            }
+
+            args = $"/c {args}";
+#else
+            if (updateApplication)
+            {
+                application = "/bin/bash";
+            }
+
+            args = $"-c \"{args}\"";
+#endif
         }
     }
 }

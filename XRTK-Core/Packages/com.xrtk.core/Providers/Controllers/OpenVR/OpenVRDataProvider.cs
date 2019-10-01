@@ -4,7 +4,6 @@
 using System;
 using UnityEngine;
 using XRTK.Definitions.Controllers;
-using XRTK.Definitions.Controllers.OpenVR;
 using XRTK.Definitions.Devices;
 using XRTK.Definitions.Utilities;
 using XRTK.Providers.Controllers.UnityInput;
@@ -34,9 +33,9 @@ namespace XRTK.Providers.Controllers.OpenVR
         protected override GenericJoystickController GetOrAddController(string joystickName)
         {
             // If a device is already registered with the ID provided, just return it.
-            if (ActiveControllers.ContainsKey(joystickName))
+            if (ActiveGenericControllers.ContainsKey(joystickName))
             {
-                var controller = ActiveControllers[joystickName];
+                var controller = ActiveGenericControllers[joystickName];
                 Debug.Assert(controller != null);
                 return controller;
             }
@@ -111,7 +110,8 @@ namespace XRTK.Providers.Controllers.OpenVR
 
             detectedController.TryRenderControllerModel(controllerType);
 
-            ActiveControllers.Add(joystickName, detectedController);
+            ActiveGenericControllers.Add(joystickName, detectedController);
+            AddController(detectedController);
             return detectedController;
         }
 
