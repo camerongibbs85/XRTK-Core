@@ -8,7 +8,7 @@ using XRTK.Interfaces.CameraSystem;
 using XRTK.Utilities;
 using XRTK.Extensions;
 using XRTK.Interfaces;
-using XRTK.Services.CameraSystem.CameraControl;
+using XRTK.Interfaces.CameraSystem.CameraControl;
 
 namespace XRTK.Services.CameraSystem
 {
