@@ -8,6 +8,7 @@ using XRTK.Interfaces.CameraSystem;
 using XRTK.Utilities;
 using XRTK.Extensions;
 using XRTK.Interfaces;
+using XRTK.Services.CameraSystem.CameraControl;
 
 namespace XRTK.Services.CameraSystem
 {
@@ -109,6 +110,23 @@ namespace XRTK.Services.CameraSystem
                 CameraRig = CameraCache.Main.gameObject.EnsureComponent(profile.CameraRigType.Type) as IMixedRealityCameraRig;
                 Debug.Assert(CameraRig != null);
                 ResetRigTransforms();
+            }
+
+            if (profile.CameraControlsEnabled)
+            {
+                ICameraController cameraController = CameraRig.PlayerCamera.GetComponent<ICameraController>();
+                if (cameraController == null)
+                {
+                    CameraRig.PlayerCamera.gameObject.EnsureComponent(profile.CameraControllerType.Type);
+                }
+            }
+            else
+            {
+                ICameraController cameraController = CameraRig.PlayerCamera.GetComponent<ICameraController>();
+                if (cameraController != null)
+                {
+                    UnityEngine.Object.Destroy((MonoBehaviour)cameraController);
+                }
             }
         }
 
