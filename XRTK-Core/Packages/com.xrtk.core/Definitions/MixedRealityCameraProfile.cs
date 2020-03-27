@@ -2,8 +2,10 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using UnityEngine;
-using XRTK.Definitions.Devices;
+using XRTK.Attributes;
 using XRTK.Definitions.Utilities;
+using XRTK.Interfaces;
+using XRTK.Services.CameraSystem;
 
 namespace XRTK.Definitions
 {
@@ -100,75 +102,46 @@ namespace XRTK.Definitions
         /// </summary>
         public int TransparentQualityLevel => transparentQualityLevel;
 
-        #region Editor Camera Controls
+        [SerializeField]
+        [Tooltip("The concrete type to use for the camera rig.")]
+        [Implements(typeof(IMixedRealityCameraRig), TypeGrouping.ByNamespaceFlat)]
+        private SystemType cameraRigType = new SystemType(typeof(DefaultCameraRig));
+
+        /// <summary>
+        /// The concrete type to use for the camera rig.
+        /// </summary>
+        public SystemType CameraRigType
+        {
+            get => cameraRigType;
+            internal set => cameraRigType = value;
+        }
 
         [SerializeField]
-        [Tooltip("Enable manual camera control")]
-        private bool isCameraControlEnabled = true;
-        public bool IsCameraControlEnabled => isCameraControlEnabled;
+        [Tooltip("The default head height the rig will start at if a platform doesn't automatically adjust the height for you.")]
+        private float defaultHeadHeight = 1.6f;
+
+        /// <summary>
+        /// The default head height the rig will start at if a platform doesn't automatically adjust the height for you.
+        /// </summary>
+        public float DefaultHeadHeight => defaultHeadHeight;
 
         [SerializeField]
-        private float extraMouseSensitivityScale = 3.0f;
-        public float ExtraMouseSensitivityScale => extraMouseSensitivityScale;
-        [SerializeField]
-        private float defaultMouseSensitivity = 0.1f;
-        public float DefaultMouseSensitivity => defaultMouseSensitivity;
+        [Range(0f, 180f)]
+        [Tooltip("This is the angle that will be used to adjust the player's body rotation in relation to their head position.")]
+        private float bodyAdjustmentAngle = 60f;
+
+        /// <summary>
+        /// /// This is the angle that will be used to adjust the player's body rotation in relation to their head position.
+        /// </summary>
+        public float BodyAdjustmentAngle => bodyAdjustmentAngle;
 
         [SerializeField]
-        [Tooltip("Controls how mouse look control is activated.")]
-        private EditorCameraControlMouseButton mouseLookButton = EditorCameraControlMouseButton.Right;
-        public EditorCameraControlMouseButton MouseLookButton => mouseLookButton;
-        [SerializeField]
-        private bool isControllerLookInverted = true;
-        public bool IsControllerLookInverted => isControllerLookInverted;
+        [Tooltip("The speed at which the body transform will sync it's rotation with the head transform.")]
+        private float bodyAdjustmentSpeed = 1f;
 
-        [SerializeField]
-        private EditorCameraControlMode currentControlMode = EditorCameraControlMode.Fly;
-        public EditorCameraControlMode CurrentControlMode => currentControlMode;
-        [SerializeField]
-        private KeyCode fastControlKey = KeyCode.RightControl;
-        public KeyCode FastControlKey => fastControlKey;
-        [SerializeField]
-        private float controlSlowSpeed = 0.1f;
-        public float ControlSlowSpeed => controlSlowSpeed;
-        [SerializeField]
-        private float controlFastSpeed = 1.0f;
-        public float ControlFastSpeed => controlFastSpeed;
-
-        // Input axes  to coordinate with the Input Manager (Project Settings -> Input)
-
-        // Horizontal movement string for keyboard and left stick of game controller
-        [SerializeField]
-        [Tooltip("Horizontal movement Axis ")]
-        private string moveHorizontal = "Horizontal";
-        public string MoveHorizontal => moveHorizontal;
-        // Vertical movement string for keyboard and left stick of game controller 
-        [SerializeField]
-        [Tooltip("Vertical movement Axis ")]
-        private string moveVertical = "Vertical";
-        public string MoveVertical => moveVertical;
-        // Mouse movement string for the x-axis
-        [SerializeField]
-        [Tooltip("Mouse Movement X-axis")]
-        private string mouseX = "Mouse X";
-        public string MouseX => mouseX;
-        // Mouse movement string for the y-axis
-        [SerializeField]
-        [Tooltip("Mouse Movement Y-axis")]
-        private string mouseY = "Mouse Y";
-        public string MouseY => mouseY;
-        // Look horizontal string for right stick of game controller
-        // The right stick has no default settings in the Input Manager and will need to be setup for a game controller to look
-        [SerializeField]
-        [Tooltip("Look Horizontal Axis - Right Stick On Controller")]
-        private string lookHorizontal = ControllerMappingLibrary.AXIS_4;
-        public string LookHorizontal => lookHorizontal;
-        // Look vertical string for right stick of game controller
-        [SerializeField]
-        [Tooltip("Look Vertical Axis - Right Stick On Controller ")]
-        private string lookVertical = ControllerMappingLibrary.AXIS_5;
-        public string LookVertical => lookVertical;
-
-        #endregion
+        /// <summary>
+        /// The speed at which the body transform will sync it's rotation with the head transform.
+        /// </summary>
+        public float BodyAdjustmentSpeed => bodyAdjustmentSpeed;
     }
 }

@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using XRTK.Definitions;
 using XRTK.Inspectors.Utilities;
+using XRTK.Services;
 
 namespace XRTK.Inspectors.Profiles
 {
@@ -22,24 +23,13 @@ namespace XRTK.Inspectors.Profiles
         private SerializedProperty transparentBackgroundColor;
         private SerializedProperty transparentQualityLevel;
 
+        private SerializedProperty cameraRigType;
+        private SerializedProperty defaultHeadHeight;
+        private SerializedProperty bodyAdjustmentAngle;
+        private SerializedProperty bodyAdjustmentSpeed;
+
         private readonly GUIContent nearClipTitle = new GUIContent("Near Clip");
         private readonly GUIContent clearFlagsTitle = new GUIContent("Clear Flags");
-
-        private SerializedProperty isCameraControlEnabled;
-        private SerializedProperty extraMouseSensitivityScale;
-        private SerializedProperty defaultMouseSensitivity;
-        private SerializedProperty mouseLookButton;
-        private SerializedProperty isControllerLookInverted;
-        private SerializedProperty currentControlMode;
-        private SerializedProperty fastControlKey;
-        private SerializedProperty controlSlowSpeed;
-        private SerializedProperty controlFastSpeed;
-        private SerializedProperty moveHorizontal;
-        private SerializedProperty moveVertical;
-        private SerializedProperty mouseX;
-        private SerializedProperty mouseY;
-        private SerializedProperty lookHorizontal;
-        private SerializedProperty lookVertical;
 
         protected override void OnEnable()
         {
@@ -56,21 +46,10 @@ namespace XRTK.Inspectors.Profiles
             transparentBackgroundColor = serializedObject.FindProperty("backgroundColorTransparentDisplay");
             transparentQualityLevel = serializedObject.FindProperty("transparentQualityLevel");
 
-            isCameraControlEnabled = serializedObject.FindProperty("isCameraControlEnabled");
-            extraMouseSensitivityScale = serializedObject.FindProperty("extraMouseSensitivityScale");
-            defaultMouseSensitivity = serializedObject.FindProperty("defaultMouseSensitivity");
-            mouseLookButton = serializedObject.FindProperty("mouseLookButton");
-            isControllerLookInverted = serializedObject.FindProperty("isControllerLookInverted");
-            currentControlMode = serializedObject.FindProperty("currentControlMode");
-            fastControlKey = serializedObject.FindProperty("fastControlKey");
-            controlSlowSpeed = serializedObject.FindProperty("controlSlowSpeed");
-            controlFastSpeed = serializedObject.FindProperty("controlFastSpeed");
-            moveHorizontal = serializedObject.FindProperty("moveHorizontal");
-            moveVertical = serializedObject.FindProperty("moveVertical");
-            mouseX = serializedObject.FindProperty("mouseX");
-            mouseY = serializedObject.FindProperty("mouseY");
-            lookHorizontal = serializedObject.FindProperty("lookHorizontal");
-            lookVertical = serializedObject.FindProperty("lookVertical");
+            cameraRigType = serializedObject.FindProperty("cameraRigType");
+            defaultHeadHeight = serializedObject.FindProperty("defaultHeadHeight");
+            bodyAdjustmentAngle = serializedObject.FindProperty("bodyAdjustmentAngle");
+            bodyAdjustmentSpeed = serializedObject.FindProperty("bodyAdjustmentSpeed");
         }
 
         public override void OnInspectorGUI()
@@ -91,9 +70,15 @@ namespace XRTK.Inspectors.Profiles
 
             serializedObject.Update();
 
+            EditorGUI.BeginChangeCheck();
+
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Global Settings:", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(isCameraPersistent);
+            EditorGUILayout.PropertyField(cameraRigType);
+            EditorGUILayout.PropertyField(defaultHeadHeight);
+            EditorGUILayout.PropertyField(bodyAdjustmentAngle);
+            EditorGUILayout.PropertyField(bodyAdjustmentSpeed);
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Opaque Display Settings:", EditorStyles.boldLabel);
@@ -119,32 +104,12 @@ namespace XRTK.Inspectors.Profiles
 
             transparentQualityLevel.intValue = EditorGUILayout.Popup("Quality Setting", transparentQualityLevel.intValue, QualitySettings.names);
 
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Editor Controls Settings:", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(isCameraControlEnabled);
-            {
-                EditorGUILayout.BeginVertical("Label");
-
-                EditorGUILayout.PropertyField(extraMouseSensitivityScale);
-                EditorGUILayout.PropertyField(defaultMouseSensitivity);
-                EditorGUILayout.PropertyField(mouseLookButton);
-                EditorGUILayout.PropertyField(isControllerLookInverted);
-                EditorGUILayout.PropertyField(currentControlMode);
-                EditorGUILayout.PropertyField(fastControlKey);
-                EditorGUILayout.PropertyField(controlSlowSpeed);
-                EditorGUILayout.PropertyField(controlFastSpeed);
-                EditorGUILayout.PropertyField(moveHorizontal);
-                EditorGUILayout.PropertyField(moveVertical);
-                EditorGUILayout.PropertyField(mouseX);
-                EditorGUILayout.PropertyField(mouseY);
-                EditorGUILayout.PropertyField(lookHorizontal);
-                EditorGUILayout.PropertyField(lookVertical);
-
-                EditorGUILayout.EndVertical();
-
-            }
-
             serializedObject.ApplyModifiedProperties();
+
+            if (MixedRealityToolkit.IsInitialized && EditorGUI.EndChangeCheck())
+            {
+                EditorApplication.delayCall += () => MixedRealityToolkit.Instance.ResetConfiguration(MixedRealityToolkit.Instance.ActiveProfile);
+            }
         }
     }
 }
