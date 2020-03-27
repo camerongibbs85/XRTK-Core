@@ -28,6 +28,9 @@ namespace XRTK.Inspectors.Profiles
         private SerializedProperty bodyAdjustmentAngle;
         private SerializedProperty bodyAdjustmentSpeed;
 
+        private SerializedProperty cameraControlsEnabled;
+        private SerializedProperty cameraControllerType;
+
         private readonly GUIContent nearClipTitle = new GUIContent("Near Clip");
         private readonly GUIContent clearFlagsTitle = new GUIContent("Clear Flags");
 
@@ -50,6 +53,9 @@ namespace XRTK.Inspectors.Profiles
             defaultHeadHeight = serializedObject.FindProperty("defaultHeadHeight");
             bodyAdjustmentAngle = serializedObject.FindProperty("bodyAdjustmentAngle");
             bodyAdjustmentSpeed = serializedObject.FindProperty("bodyAdjustmentSpeed");
+
+            cameraControlsEnabled = serializedObject.FindProperty(nameof(cameraControlsEnabled));
+            cameraControllerType = serializedObject.FindProperty(nameof(cameraControllerType));
         }
 
         public override void OnInspectorGUI()
@@ -103,6 +109,10 @@ namespace XRTK.Inspectors.Profiles
             }
 
             transparentQualityLevel.intValue = EditorGUILayout.Popup("Quality Setting", transparentQualityLevel.intValue, QualitySettings.names);
+
+            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(cameraControlsEnabled);
+            EditorGUILayout.PropertyField(cameraControllerType);
 
             serializedObject.ApplyModifiedProperties();
 

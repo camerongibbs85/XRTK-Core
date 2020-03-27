@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) XRTK. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using UnityEngine;
@@ -6,6 +6,7 @@ using XRTK.Attributes;
 using XRTK.Definitions.Utilities;
 using XRTK.Interfaces;
 using XRTK.Services.CameraSystem;
+using XRTK.Services.CameraSystem.CameraControl;
 
 namespace XRTK.Definitions
 {
@@ -143,5 +144,29 @@ namespace XRTK.Definitions
         /// The speed at which the body transform will sync it's rotation with the head transform.
         /// </summary>
         public float BodyAdjustmentSpeed => bodyAdjustmentSpeed;
+
+        #region Camera Control
+
+        [Header("Camera Control Settings")]
+        [SerializeField]
+        [Tooltip("Should the camera controller get attached to the camera on start?")]
+        private bool cameraControlsEnabled = false;
+
+        /// <summary>
+        /// Should the camera controller get attached to the camera on start?
+        /// </summary>
+        public bool CameraControlsEnabled => cameraControlsEnabled;
+
+        [SerializeField]
+        [Tooltip("The camera controller concrete type to use for camera movement.")]
+        [Implements(typeof(ICameraController), TypeGrouping.ByNamespaceFlat)]
+        private SystemType cameraControllerType;
+
+        /// <summary>
+        /// The camera controller concrete type to use for camera movement.
+        /// </summary>
+        public SystemType CameraControllerType => cameraControllerType;
+
+        #endregion Camera Control
     }
 }
