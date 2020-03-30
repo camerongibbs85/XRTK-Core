@@ -5,8 +5,8 @@ using UnityEngine;
 using XRTK.Attributes;
 using XRTK.Definitions.Utilities;
 using XRTK.Interfaces;
+using XRTK.Interfaces.CameraSystem.CameraControl;
 using XRTK.Services.CameraSystem;
-using XRTK.Services.CameraSystem.CameraControl;
 
 namespace XRTK.Definitions
 {
