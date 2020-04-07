@@ -163,11 +163,11 @@ namespace XRTK.Utilities.Editor
                 }
             }
 
-            if (PlayerSettings.scriptingRuntimeVersion != ScriptingRuntimeVersion.Latest)
-            {
-                PlayerSettings.scriptingRuntimeVersion = ScriptingRuntimeVersion.Latest;
-                restart = true;
-            }
+            //if (PlayerSettings.scriptingRuntimeVersion != ScriptingRuntimeVersion.Latest)
+            //{
+            //    PlayerSettings.scriptingRuntimeVersion = ScriptingRuntimeVersion.Latest;
+            //    restart = true;
+            //}
 
             if (refresh || restart)
             {

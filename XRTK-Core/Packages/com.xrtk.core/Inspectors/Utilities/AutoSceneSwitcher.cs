@@ -20,11 +20,13 @@ namespace XRTK.Inspectors.Utilities
         {
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 
-            if (MixedRealityPreferences.StartSceneAsset == null &&
+            if (XRTKProjectSettings.ProjectSettings != null &&
+                XRTKProjectSettings.ProjectSettingsObject.StartupScene == null &&
                 EditorBuildSettings.scenes.Length > 0 &&
                 !EditorBuildSettings.scenes[0].path.Contains("SampleScene"))
             {
-                MixedRealityPreferences.StartSceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(EditorBuildSettings.scenes[0].path);
+                XRTKProjectSettings.ProjectSettingsObject.StartupScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(EditorBuildSettings.scenes[0].path);
+                XRTKProjectSettings.ProjectSettings.ApplyModifiedProperties();
             }
         }
 
@@ -38,7 +40,13 @@ namespace XRTK.Inspectors.Utilities
                 return;
             }
 
-            var startSceneAsset = MixedRealityPreferences.StartSceneAsset;
+            if (XRTKProjectSettings.ProjectSettingsObject == null)
+            {
+                XRTKProjectSettings.ProjectSettingsErrorMsg();
+                return;
+            } 
+
+            var startSceneAsset = XRTKProjectSettings.ProjectSettingsObject.StartupScene;
             var startSceneLoaded = false;
 
             if (startSceneAsset != null)

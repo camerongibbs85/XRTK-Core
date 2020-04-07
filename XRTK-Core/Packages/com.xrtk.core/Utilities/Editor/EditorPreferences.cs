@@ -16,10 +16,11 @@ namespace XRTK.Utilities.Editor
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public static void Set(string key, string value)
+        public static void Set(string key, string value, bool applicationPrefix = true)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(key));
-            EditorPrefs.SetString($"{Application.productName}_{key}", value);
+            var prefKey = applicationPrefix ? $"{Application.productName}_{key}" : key;
+            EditorPrefs.SetString(prefKey, value);
         }
 
         /// <summary>
@@ -27,10 +28,11 @@ namespace XRTK.Utilities.Editor
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public static void Set(string key, bool value)
+        public static void Set(string key, bool value, bool applicationPrefix = true)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(key));
-            EditorPrefs.SetBool($"{Application.productName}_{key}", value);
+            var prefKey = applicationPrefix ? $"{Application.productName}_{key}" : key;
+            EditorPrefs.SetBool(prefKey, value);
         }
 
         /// <summary>
@@ -38,10 +40,11 @@ namespace XRTK.Utilities.Editor
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public static void Set(string key, float value)
+        public static void Set(string key, float value, bool applicationPrefix = true)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(key));
-            EditorPrefs.SetFloat($"{Application.productName}_{key}", value);
+            var prefKey = applicationPrefix ? $"{Application.productName}_{key}" : key;
+            EditorPrefs.SetFloat(prefKey, value);
         }
 
         /// <summary>
@@ -49,10 +52,11 @@ namespace XRTK.Utilities.Editor
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public static void Set(string key, int value)
+        public static void Set(string key, int value, bool applicationPrefix = true)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(key));
-            EditorPrefs.SetInt($"{Application.productName}_{key}", value);
+            var prefKey = applicationPrefix ? $"{Application.productName}_{key}" : key;
+            EditorPrefs.SetInt(prefKey, value);
         }
 
         /// <summary>
@@ -60,16 +64,16 @@ namespace XRTK.Utilities.Editor
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        public static string Get(string key, string defaultValue)
+        public static string Get(string key, string defaultValue, bool applicationPrefix = true)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(key));
-
-            if (EditorPrefs.HasKey($"{Application.productName}_{key}"))
+            var prefKey = applicationPrefix ? $"{Application.productName}_{key}" : key;
+            if (EditorPrefs.HasKey(prefKey))
             {
-                return EditorPrefs.GetString($"{Application.productName}_{key}");
+                return EditorPrefs.GetString(prefKey);
             }
 
-            EditorPrefs.SetString($"{Application.productName}_{key}", defaultValue);
+            EditorPrefs.SetString(prefKey, defaultValue);
             return defaultValue;
         }
 
@@ -78,16 +82,16 @@ namespace XRTK.Utilities.Editor
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        public static bool Get(string key, bool defaultValue)
+        public static bool Get(string key, bool defaultValue, bool applicationPrefix = true)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(key));
-
-            if (EditorPrefs.HasKey($"{Application.productName}_{key}"))
+            var prefKey = applicationPrefix ? $"{Application.productName}_{key}" : key;
+            if (EditorPrefs.HasKey(prefKey))
             {
-                return EditorPrefs.GetBool($"{Application.productName}_{key}");
+                return EditorPrefs.GetBool(prefKey);
             }
 
-            EditorPrefs.SetBool($"{Application.productName}_{key}", defaultValue);
+            EditorPrefs.SetBool(prefKey, defaultValue);
             return defaultValue;
         }
 
@@ -96,16 +100,16 @@ namespace XRTK.Utilities.Editor
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        public static float Get(string key, float defaultValue)
+        public static float Get(string key, float defaultValue, bool applicationPrefix = true)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(key));
-
-            if (EditorPrefs.HasKey($"{Application.productName}_{key}"))
+            var prefKey = applicationPrefix ? $"{Application.productName}_{key}" : key;
+            if (EditorPrefs.HasKey(prefKey))
             {
-                return EditorPrefs.GetFloat($"{Application.productName}_{key}");
+                return EditorPrefs.GetFloat(prefKey);
             }
 
-            EditorPrefs.SetFloat($"{Application.productName}_{key}", defaultValue);
+            EditorPrefs.SetFloat(prefKey, defaultValue);
             return defaultValue;
         }
 
@@ -114,16 +118,16 @@ namespace XRTK.Utilities.Editor
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        public static int Get(string key, int defaultValue)
+        public static int Get(string key, int defaultValue, bool applicationPrefix = true)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(key));
-
-            if (EditorPrefs.HasKey($"{Application.productName}_{key}"))
+            var prefKey = applicationPrefix ? $"{Application.productName}_{key}" : key;
+            if (EditorPrefs.HasKey(prefKey))
             {
-                return EditorPrefs.GetInt($"{Application.productName}_{key}");
+                return EditorPrefs.GetInt(prefKey);
             }
 
-            EditorPrefs.SetInt($"{Application.productName}_{key}", defaultValue);
+            EditorPrefs.SetInt(prefKey, defaultValue);
             return defaultValue;
         }
     }

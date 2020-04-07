@@ -35,7 +35,7 @@ namespace XRTK.Inspectors.Utilities
             get
             {
                 if (!MixedRealityToolkit.IsInitialized ||
-                    !MixedRealityPreferences.ShowCanvasUtilityPrompt)
+                    XRTKProjectSettings.ProjectSettingsObject?.EnableCanvasUtilityDialog == true)
                 {
                     return false;
                 }
@@ -90,7 +90,8 @@ namespace XRTK.Inspectors.Utilities
                         removeUtility = true;
                         break;
                     case 2:
-                        MixedRealityPreferences.ShowCanvasUtilityPrompt = false;
+                        XRTKProjectSettings.ProjectSettingsObject.EnableCanvasUtilityDialog = false;
+                        XRTKProjectSettings.ProjectSettings.ApplyModifiedProperties();
                         removeUtility = true;
                         break;
                 }

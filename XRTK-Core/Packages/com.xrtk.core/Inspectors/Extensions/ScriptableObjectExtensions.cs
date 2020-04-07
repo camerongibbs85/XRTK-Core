@@ -47,7 +47,7 @@ namespace XRTK.Inspectors.Extensions
 
             if (string.IsNullOrWhiteSpace(path))
             {
-                path = MixedRealityPreferences.ProfileGenerationPath;
+                path = XRTKProjectSettings.ProjectSettingsObject.ProfileGenerationPath;
             }
 
             if (!string.IsNullOrWhiteSpace(Path.GetExtension(path)))

@@ -65,7 +65,7 @@ namespace XRTK.Inspectors
                                 var sourceAssetPath = AssetDatabase.GetAssetPath(mixedRealityProfile);
                                 var destinationPath = sourceAssetPath.Replace($"{PathFinderUtility.XRTK_SDK_RelativeFolderPath}/DefaultProfiles/", "");
                                 destinationPath = destinationPath.Replace("Default", "");
-                                destinationPath = $"{MixedRealityPreferences.ProfileGenerationPath}/{destinationPath}";
+                                destinationPath = $"{XRTKProjectSettings.ProjectSettingsObject.ProfileGenerationPath}/{destinationPath}";
                                 destinationPath = Path.Combine(Directory.GetParent(Application.dataPath).FullName, destinationPath);
                                 var fullPath = Directory.GetParent(destinationPath).FullName;
 
@@ -143,7 +143,7 @@ namespace XRTK.Inspectors
         {
             try
             {
-                var startScene = MixedRealityPreferences.StartSceneAsset;
+                var startScene = XRTKProjectSettings.ProjectSettingsObject?.StartupScene;
 
                 if (startScene != null)
                 {
@@ -185,7 +185,7 @@ namespace XRTK.Inspectors
                 {
                     var activeScene = SceneManager.GetActiveScene();
                     Debug.Assert(!string.IsNullOrEmpty(activeScene.path), "Configured Scene must be saved in order to set it as the Start Scene!\n" + "Please save your scene and set it as the Start Scene in the XRTK preferences.");
-                    MixedRealityPreferences.StartSceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(activeScene.path);
+                    XRTKProjectSettings.ProjectSettingsObject.StartupScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(activeScene.path);
                 }
             }
             catch (Exception e)

@@ -63,13 +63,7 @@ namespace XRTK.Inspectors.Utilities.SymbolicLinks
         {
             get
             {
-                if (settings == null &&
-                    !string.IsNullOrEmpty(MixedRealityPreferences.SymbolicLinkSettingsPath))
-                {
-                    settings = AssetDatabase.LoadAssetAtPath<SymbolicLinkSettings>(MixedRealityPreferences.SymbolicLinkSettingsPath);
-                }
-
-                return settings;
+                return XRTKProjectSettings.ProjectSettingsObject?.SymbolicLinkSettings;
             }
             internal set => settings = value;
         }
@@ -106,11 +100,7 @@ namespace XRTK.Inspectors.Utilities.SymbolicLinks
 
             if (Settings == null)
             {
-                if (!string.IsNullOrEmpty(MixedRealityPreferences.SymbolicLinkSettingsPath))
-                {
-                    Debug.LogWarning("Symbolic link settings not found! Auto load links has been turned off.\nYou can enable this again in the xrtk preferences.");
-                }
-
+                Debug.LogWarning("Symbolic link settings not found! Auto load links has been turned off.\nYou can enable this again in the xrtk preferences.");
                 MixedRealityPreferences.AutoLoadSymbolicLinks = false;
                 return;
             }
