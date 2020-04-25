@@ -19,7 +19,7 @@ using XRTK.Utilities.Editor;
 
 namespace XRTK.Inspectors
 {
-    [CreateAssetMenu(menuName = "Mixed Reality Toolkit/Project Settings", fileName = "ProjectSettings", order = (int)CreateProfileMenuItemIndices.Settings)]
+    [CreateAssetMenu(menuName = "Mixed Reality Toolkit/Project Settings", fileName = "XRTKProjectSettings", order = (int)CreateProfileMenuItemIndices.Settings)]
     public class XRTKProjectSettings : ScriptableObject
     {
         public static void ProjectSettingsErrorMsg() { Debug.LogError("XRTK Project Settings not found, please create a new object and set it in Project>XRTK"); }
@@ -29,17 +29,18 @@ namespace XRTK.Inspectors
             // Preferences aren't guaranteed to hydrate before static constructors or methods.
             MixedRealityPreferences.OnPreferencesLoaded += () =>
             {
-                if (projectSettings == null && !string.IsNullOrWhiteSpace(projectSettingsGuid) &&
-                    AssetDatabase
-                        .LoadAssetAtPath<XRTKProjectSettings>(AssetDatabase.GUIDToAssetPath(projectSettingsGuid)) is var loadedProjectSettings)
+                if (projectSettings == null && !string.IsNullOrWhiteSpace(projectSettingsGuid))
                 {
+                    Debug.Log($"Trying to load project asset... ({projectSettingsGuid})");
+                    var loadedProjectSettings = AssetDatabase.LoadAssetAtPath<XRTKProjectSettings>(AssetDatabase.GUIDToAssetPath(projectSettingsGuid));
+
                     if (loadedProjectSettings == null)
                     {
                         ProjectSettingsErrorMsg();
                     }
                     else
                     {
-                        Debug.Log($"Project asset loaded ({projectSettingsGuid})");
+                        Debug.Log($"Project asset loaded! ({projectSettingsGuid})");
                         projectSettings = new SerializedObject(loadedProjectSettings);
                     }
                 }
