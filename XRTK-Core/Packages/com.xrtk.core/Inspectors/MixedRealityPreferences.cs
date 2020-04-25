@@ -13,6 +13,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using XRTK.Attributes;
 using XRTK.Definitions.Utilities;
+using XRTK.Extensions;
+using XRTK.Inspectors.Components;
 using XRTK.Inspectors.Extensions;
 using XRTK.Inspectors.Utilities.SymbolicLinks;
 using XRTK.Utilities.Editor;
@@ -119,7 +121,8 @@ namespace XRTK.Inspectors
 
         private static void ProjectSettingsElements(string context, VisualElement root)
         {
-            // root.Add(new XRTKLogo());
+            root.LoadStyleSheet();
+            root.Add(new XRTKLogo());
 
             var projectSettings = new ObjectField
             {
@@ -141,8 +144,11 @@ namespace XRTK.Inspectors
                     ProjectSettingsGUID = "";
                 }
 
-                root.Clear();
-                EditorApplication.delayCall += () => ProjectSettingsElements("", root);
+                EditorApplication.delayCall += () =>
+                {
+                    root.Clear();
+                    ProjectSettingsElements("", root);
+                };
             });
             root.Add(projectSettings);
 
@@ -307,6 +313,9 @@ namespace XRTK.Inspectors
 
         private static void XRTKPreferences(string searchContext, VisualElement root)
         {
+            root.LoadStyleSheet();
+            root.Add(new XRTKLogo());
+
             var debugSymbolicInfoField = new Toggle {label = "Debug Symbolic Info", value = debugSymbolicInfo, tooltip = "Enable or disable the debug information for symbolic linking.\n\nThis setting only applies to the currently running project."};
             debugSymbolicInfoField.RegisterValueChangedCallback(evt => { DebugSymbolicInfo = evt.newValue; });
 

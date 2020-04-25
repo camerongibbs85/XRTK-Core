@@ -1,0 +1,13 @@
+.xrtk-logo {
+    width: 400px;
+    height: 200px;
+    align-self: center;
+}
+
+.xrtk-logo--dark {
+    background-image: url("../..//StandardAssets/Textures/XRTK_Logo.png")
+}
+
+.xrtk-logo--light {
+
+}
